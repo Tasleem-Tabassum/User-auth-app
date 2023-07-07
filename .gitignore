@@ -1,0 +1,5 @@
+react-ts-client/node_modules
+
+serverless-GraphQL-APIs-ts/.serverless
+serverless-GraphQL-APIs-ts/dist
+serverless-GraphQL-APIs-ts/node_modules
