@@ -11,7 +11,7 @@ export const resolvers = {
                     userName: "sam123@gmail.com",
                     password: "password",
                     role: "admin",
-                    mobile: 7634535,
+                    mobile: '7634535',
                     createdAt: "28-06-2023"
                 }
             ];

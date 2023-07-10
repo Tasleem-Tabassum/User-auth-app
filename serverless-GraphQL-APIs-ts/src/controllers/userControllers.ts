@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { User } from "../models/interfaces";
 import { response } from "../models/response";
 
-export const signUpController = async (name: string, userName: string, password: string, role: string, mobile: number): Promise<response> => {
+export const signUpController = async (name: string, userName: string, password: string, role: string, mobile: string): Promise<response> => {
     try {
 
         console.log(userName, password, name, mobile, role)
@@ -38,12 +38,12 @@ export const signUpController = async (name: string, userName: string, password:
             }
         }
         
-        if(typeof mobile !== 'number') {
-            return {
-                statusCode: 400,
-                body: "Mobile Number must be a number"
-            }
-        }
+        // if(typeof mobile !== 'number') {
+        //     return {
+        //         statusCode: 400,
+        //         body: "Mobile Number must be a number"
+        //     }
+        // }
 
         const getDataParams = {
             TableName: process.env.USERS_TABLE || '',
@@ -119,7 +119,7 @@ export const getUserFromDb = async (userName: string): Promise<any> => {
     }
 };
 
-export const loginController = async (userName: string, password: string, mobile: number): Promise<response> => {
+export const loginController = async (userName: string, password: string, mobile: string): Promise<response> => {
     try {
         if(!userName || !mobile) {
             return {
@@ -228,7 +228,7 @@ export const getUserController = async (token: string): Promise<response> => {
     }
 };
   
-export const updateUserController = async (token: string, name: string, userName: string, password: string, role: string, mobile: number): Promise<response> => {
+export const updateUserController = async (token: string, name: string, userName: string, password: string, role: string, mobile: string): Promise<response> => {
     try {
       
         const secretKey = process.env.JWT_SECRET || ''
@@ -290,7 +290,7 @@ export const updateUserController = async (token: string, name: string, userName
     }
 }
 
-export const changePasswordController = async (token: string, userName: string, mobile: number, oldPassword: string, newPassword: string): Promise<response> => {
+export const changePasswordController = async (token: string, userName: string, mobile: string, oldPassword: string, newPassword: string): Promise<response> => {
     try {
         const secretKey = process.env.JWT_SECRET || ''
 
@@ -339,7 +339,7 @@ export const changePasswordController = async (token: string, userName: string, 
     }
 }
 
-const verifyPassword = async (userName: string, password: string, mobile: number) => {
+const verifyPassword = async (userName: string, password: string, mobile: string) => {
     const user = await getUserFromDb(userName);
     console.log(user[0])
 
@@ -353,7 +353,7 @@ const verifyPassword = async (userName: string, password: string, mobile: number
     return await bcrypt.compare(password, passwordFromDb)
 }
 
-const updatePassword = async (userName: string, password: string, mobile: number) => {
+const updatePassword = async (userName: string, password: string, mobile: string) => {
     try {
 
         const params = {

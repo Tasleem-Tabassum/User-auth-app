@@ -96,6 +96,8 @@ const useStyles = makeStyles((theme) => ({
 
 const UpdateProfile: React.FC = () => {
 
+  const isTokenAvailable = localStorage.getItem('token')
+
   const [updateUser, { loading, error }] = useMutation(UPDATE_PROFILE)
 
   const [getUser] = useMutation(GET_USER)
@@ -106,7 +108,7 @@ const UpdateProfile: React.FC = () => {
 
   const [user, setUser] = React.useState({
     userName: '',
-    mobile: null as number | null,
+    mobile: '',
     password: '',
     role: '',
     name: ''
@@ -209,7 +211,7 @@ const UpdateProfile: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className={classes.signupPage}>
+      {isTokenAvailable ? (<div className={classes.signupPage}>
         <span className={classes.signupHeader}>
           UPDATE PROFILE
         </span>
@@ -314,7 +316,9 @@ const UpdateProfile: React.FC = () => {
             </div>
           </form>
         </div>
-      </div>
+      </div>) : (
+        <div><Alert severity="error">Unauthorized!</Alert></div>
+      )}
     </ThemeProvider>
   )
 }

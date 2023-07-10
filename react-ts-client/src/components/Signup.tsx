@@ -94,7 +94,7 @@ const Signup: React.FC = () => {
 
   const [user, setUser] = React.useState({
     userName: '',
-    mobile: null as number | null,
+    mobile: '',
     password: '',
     role: '',
     name: ''
@@ -221,7 +221,7 @@ const Signup: React.FC = () => {
                 id='mobile'
                 placeholder='Please enter mobile number...'
                 className={classes.textField}
-                onChange={(e) => setUser({...user, mobile: parseInt(e.target.value)})}
+                onChange={(e) => setUser({...user, mobile: e.target.value})}
                 value={user.mobile}
                 required
               />

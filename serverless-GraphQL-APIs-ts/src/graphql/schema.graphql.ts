@@ -6,8 +6,8 @@ export const typeDefs = gql`
         name: String
         userName: String!
         password: String!
+        mobile: String!
         role: String
-        mobile: Int!
         createdAt: String
     }
 
@@ -28,14 +28,14 @@ export const typeDefs = gql`
         name: String!
         userName: String!
         password: String!
+        mobile: String!
         role: String!
-        mobile: Int!
     }
 
     input LoginInput {
         userName: String!
         password: String!
-        mobile: Int!
+        mobile: String!
     }
 
     input GetUserInput {
@@ -45,7 +45,7 @@ export const typeDefs = gql`
     input ChangePasswordInput {
         token: String!
         userName: String!
-        mobile: Int!
+        mobile: String!
         oldPassword: String!
         newPassword: String!
     }
@@ -55,8 +55,8 @@ export const typeDefs = gql`
         name: String!
         userName: String!
         password: String!
+        mobile: String!
         role: String!
-        mobile: Int!
     }
 
     type Mutation {

@@ -90,6 +90,8 @@ const useStyles = makeStyles((theme) => ({
 
 const ChangePassword: React.FC = () => {
 
+  const isTokenAvailable = localStorage.getItem('token')
+
   const [changePassword] = useMutation(CHANGE_PASSWORD)
 
   const [getUser, { loading, error }] = useMutation(GET_USER)
@@ -205,7 +207,7 @@ const ChangePassword: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className={classes.userPage}>
+      {isTokenAvailable ? (<div className={classes.userPage}>
         <span className={classes.userHeader}>
           CHANGE PASSWORD
         </span>
@@ -307,7 +309,9 @@ const ChangePassword: React.FC = () => {
             </div>
           </form>
         </div>
-      </div>
+      </div>) : (
+        <div><Alert severity="error">Unauthorized!</Alert></div>
+      )}
     </ThemeProvider>
   )
 }

@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect } from 'react'
 import { Button, TextField, makeStyles, createTheme, ThemeProvider } from '@material-ui/core';
+import { Stack, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { GET_USER } from '../graphql/mutation';
+import Logout from './Logout';
 
 const theme = createTheme({
   palette: {
@@ -18,14 +20,14 @@ const theme = createTheme({
 
 const useStyles = makeStyles((theme) => ({
   updateButton: {
-    alignSelf: 'center',
-    // paddingLeft: '25px'
-    margin: '0px 30px 30px 30px'
+    // alignSelf: 'center',
+    // // paddingLeft: '25px'
+    // margin: '0px 30px 30px 30px'
   },
   changeButton: {
-    alignSelf: 'center',
-    // paddingLeft: '25px'
-    margin: '0px 0px 30px 0px'
+    // alignSelf: 'center',
+    // // paddingLeft: '25px'
+    // margin: '0px 0px 30px 0px'
   },
   userHeader: {
     fontSize: '24px',
@@ -83,11 +85,18 @@ const useStyles = makeStyles((theme) => ({
     padding: '12px'
   },
   Group3: {
-    // padding: '15px'
+    alignItems: 'center',
+    // display: 'flex',
+    // flexDirection: 'row'
+    // paddingLeft: '25px'
+    // margin: '0px 0px 30px 0px'
+    padding: '0px 10px 20px 30px'
   }
 }))
 
 const User: React.FC = () => {
+
+  const isTokenAvailable = localStorage.getItem('token')
 
   const [getUser, { loading, error }] = useMutation(GET_USER)
 
@@ -98,7 +107,7 @@ const User: React.FC = () => {
   const [user, setUser] = React.useState({
     userName: '',
     // eslint-disable-next-line no-octal
-    mobile: 0,
+    mobile: '',
     password: '*******',
     role: '',
     name: ''
@@ -150,7 +159,7 @@ const User: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className={classes.userPage}>
+      {isTokenAvailable ? (<div className={classes.userPage}>
         <span className={classes.userHeader}>
           USER PROFILE
         </span>
@@ -238,16 +247,22 @@ const User: React.FC = () => {
               </div>
             </div>
             <div className={classes.Group3}>
+            <Stack spacing={2} direction="row">
               <Button variant='outlined' color='primary' onClick={(e) => handleUpdateProfile(e)} className={classes.updateButton}>
                 Update Profile
               </Button>
               <Button variant='outlined' color='primary' onClick={(e) => handleChangePassword(e)} className={classes.changeButton}>
                 Change Password
               </Button>
+              <Logout />
+              </Stack>
             </div>
           </form>
         </div>
       </div>
+      ) : (
+      <div><Alert severity="error">Unauthorized!</Alert></div>
+      )}
     </ThemeProvider>
   )
 }

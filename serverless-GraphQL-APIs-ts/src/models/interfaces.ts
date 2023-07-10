@@ -2,7 +2,7 @@ export interface User {
     id?: string;
     name?: string;
     userName: string;
-    mobile: number;
+    mobile: string;
     password: string;
     role?: string;
     createdAt?: string; 
@@ -13,13 +13,13 @@ export interface SignUpInput {
     userName: string;
     password: string;
     role: string;
-    mobile: number;
+    mobile: string;
 }
 
 export interface LoginInput {
     userName: string;
     password: string;
-    mobile: number;
+    mobile: string;
 }
 
 export interface GetUserInput {
@@ -29,7 +29,7 @@ export interface GetUserInput {
 export interface ChangePasswordInput {
     token: string;
     userName: string;
-    mobile: number;
+    mobile: string;
     oldPassword: string;
     newPassword: string;
 }
@@ -40,6 +40,6 @@ export interface UpdateUserInput {
     userName: string;
     password: string;
     role: string;
-    mobile: number;
+    mobile: string;
 }
 

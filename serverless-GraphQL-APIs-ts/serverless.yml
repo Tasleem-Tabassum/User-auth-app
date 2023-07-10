@@ -80,7 +80,7 @@ resources:
           - AttributeName: "UserName"
             AttributeType: "S"
           - AttributeName: "MobileNumber"
-            AttributeType: "N"
+            AttributeType: "S"
           - AttributeName: "Role"
             AttributeType: "S"
         KeySchema:
