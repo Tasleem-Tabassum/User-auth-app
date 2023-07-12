@@ -1,5 +1,6 @@
+/* eslint-disable linebreak-style */
 import * as AWS from "aws-sdk";
-import * as dotenv from "dotenv";
+// import * as dotenv from "dotenv";
 // dotenv.config();
 
 export const dynamodb = new AWS.DynamoDB.DocumentClient();

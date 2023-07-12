@@ -1,31 +1,33 @@
-import React from 'react';
-import { Button, makeStyles, createTheme, ThemeProvider } from '@material-ui/core';
-import { useNavigate } from 'react-router-dom';
+/* eslint-disable linebreak-style */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React from "react";
+import { Button, makeStyles, createTheme, ThemeProvider } from "@material-ui/core";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme({
     palette: {
-      primary: {
-        main: '#f02726',
-      }
+        primary: {
+            main: "#f02726",
+        }
     }
-  })
+});
 
 const Logout: React.FC = () => {
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 
-        localStorage.removeItem('token')
+        localStorage.removeItem("token");
 
-        navigate('/');
-    }
+        navigate("/");
+    };
 
-  return (
-    <div>
-        <Button variant='contained' color='primary' onClick={(e) => {handleClick(e)}}>Logout</Button>
-    </div>
-  )
-}
+    return (
+        <div>
+            <Button variant='contained' color='primary' onClick={(e) => {handleClick(e);}}>Logout</Button>
+        </div>
+    );
+};
 
-export default Logout
+export default Logout;

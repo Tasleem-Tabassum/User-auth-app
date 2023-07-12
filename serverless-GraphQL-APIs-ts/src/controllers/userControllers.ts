@@ -1,41 +1,44 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import AWS, { dynamodb } from "../config/aws";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { User } from "../models/interfaces";
 import { response } from "../models/response";
 
 export const signUpController = async (name: string, userName: string, password: string, role: string, mobile: string): Promise<response> => {
     try {
 
-        console.log(userName, password, name, mobile, role)
+        console.log(userName, password, name, mobile, role);
 
         if(!userName || !password || !name || !mobile || !role) {
             return {
                 statusCode: 400,
                 body: "All the fields are mandatory"
-            }
+            };
         }
 
-        if(typeof userName !== 'string') {
+        if(typeof userName !== "string") {
             return {
                 statusCode: 400,
                 body: "UserName must be a string"
-            }
+            };
         }
 
-        if(typeof password !== 'string') {
+        if(typeof password !== "string") {
             return {
                 statusCode: 400,
                 body: "Password must be a string"
-            }
+            };
         }
 
-        if(typeof name !== 'string') {
+        if(typeof name !== "string") {
             return {
                 statusCode: 400,
                 body: "Name must be a string"
-            }
+            };
         }
         
         // if(typeof mobile !== 'number') {
@@ -46,19 +49,19 @@ export const signUpController = async (name: string, userName: string, password:
         // }
 
         const getDataParams = {
-            TableName: process.env.USERS_TABLE || '',
+            TableName: process.env.USERS_TABLE || "",
             Key: {
                 UserName: userName,
                 MobileNumber: mobile
             }
-        }
+        };
 
         const user = await dynamodb.get(getDataParams).promise();
-        console.log(user)
+        console.log(user);
         
 
         if(user.Item?.UserName !== undefined) {
-            console.log("user", user)
+            console.log("user", user);
             return {
                 statusCode: 400,
                 body: JSON.stringify({
@@ -70,7 +73,7 @@ export const signUpController = async (name: string, userName: string, password:
         const passwordHash = await bcrypt.hash(password, 8);
 
         const params = {
-            TableName: process.env.USERS_TABLE || '',
+            TableName: process.env.USERS_TABLE || "",
             Item: {
                 id: uuidv4(),
                 UserName: userName,
@@ -80,7 +83,7 @@ export const signUpController = async (name: string, userName: string, password:
                 MobileNumber: mobile,
                 createdAt: new Date().toISOString()
             }
-        }
+        };
 
         await dynamodb.put(params).promise();
         
@@ -89,32 +92,32 @@ export const signUpController = async (name: string, userName: string, password:
             body: JSON.stringify({
                 message: "signup successful"
             })
-        }
+        };
     } catch(error) {
-        console.error('Error while signup:', error);
+        console.error("Error while signup:", error);
     
         return {
-          statusCode: 500,
-          body: JSON.stringify({ message: 'Signup Failed' }),
+            statusCode: 500,
+            body: JSON.stringify({ message: "Signup Failed" }),
         };
     }
-}
+};
 
 export const getUserFromDb = async (userName: string): Promise<any> => {
     const params = {
-        TableName: process.env.USERS_TABLE || '',
-        KeyConditionExpression: 'UserName = :userName',
+        TableName: process.env.USERS_TABLE || "",
+        KeyConditionExpression: "UserName = :userName",
         ExpressionAttributeValues: {
-        ':userName': userName,
+            ":userName": userName,
         }
     };
 
     try {
         const data = await dynamodb.query(params).promise();
-        console.log('data from query', data.Items);
+        console.log("data from query", data.Items);
         return data.Items;
     } catch (error) {
-        console.log('Error occurred while scanning data from DynamoDB', error);
+        console.log("Error occurred while scanning data from DynamoDB", error);
         return null;
     }
 };
@@ -125,13 +128,13 @@ export const loginController = async (userName: string, password: string, mobile
             return {
                 statusCode: 400,
                 body: "Login details are missing"
-            }
+            };
         }
         
         if (!password) {
             return {
-            statusCode: 500,
-            body: "User password is missing",
+                statusCode: 500,
+                body: "User password is missing",
             };
         }
     
@@ -141,8 +144,8 @@ export const loginController = async (userName: string, password: string, mobile
     
         if (!user || user.length === 0 || !user[0].Password) {
             return {
-            statusCode: 404,
-            body: "User not found",
+                statusCode: 404,
+                body: "User not found",
             };
         }
     
@@ -154,32 +157,32 @@ export const loginController = async (userName: string, password: string, mobile
     
         if (!isMatch) {
             return {
-            statusCode: 401,
-            body: "Invalid password",
+                statusCode: 401,
+                body: "Invalid password",
             };
         } else {
-            console.log("Before generating token")
-            const secretKey = process.env.JWT_SECRET || ''
+            console.log("Before generating token");
+            const secretKey = process.env.JWT_SECRET || "";
             const token = jwt.sign({UserName: userName}, secretKey, {
-            expiresIn: 3600
-            })
-            console.log("Before generating token")
+                expiresIn: 3600
+            });
+            console.log("Before generating token");
     
             return {
-            statusCode: 200,
-            body: JSON.stringify({ message: 'Login successful', token })
-            }
+                statusCode: 200,
+                body: JSON.stringify({ message: "Login successful", token })
+            };
         }
   
     } catch(error) {
-        console.error('Error while login:', error);
+        console.error("Error while login:", error);
     
         return {
-          statusCode: 500,
-          body: JSON.stringify({ message: 'Login Failed!' }),
+            statusCode: 500,
+            body: JSON.stringify({ message: "Login Failed!" }),
         };
     }
-}
+};
 
 export const getUserController = async (token: string): Promise<response> => {
     try {
@@ -188,42 +191,42 @@ export const getUserController = async (token: string): Promise<response> => {
   
         // const token = authToken.split(' ')[1];
   
-        const secretKey = process.env.JWT_SECRET || ''
+        const secretKey = process.env.JWT_SECRET || "";
   
         const decodedToken: any = jwt.verify(token, secretKey);
   
-        console.log(decodedToken)
+        console.log(decodedToken);
   
         if(/*!authToken || */!decodedToken || !decodedToken.UserName) {
-            console.log('decodedToken', decodedToken)
+            console.log("decodedToken", decodedToken);
             return {
                 statusCode: 401,
-                body: JSON.stringify({ message: 'Unauthorized' }),
+                body: JSON.stringify({ message: "Unauthorized" }),
             };
         }
   
         const userName = decodedToken.UserName;
   
-        const user = await getUserFromDb(userName)
-        console.log('user in getuser',user)
+        const user = await getUserFromDb(userName);
+        console.log("user in getuser",user);
   
         if(!user) {
             return {
                 statusCode: 404,
                 body: JSON.stringify({ message: "User not found" })
-            }
+            };
         }
         
         return {
             statusCode: 200,
             body: JSON.stringify({ user })
-        }
+        };
     } catch (error) {
-        console.error('Error while fetching table items:', error);
+        console.error("Error while fetching table items:", error);
     
         return {
             statusCode: 500,
-            body: JSON.stringify({ message: 'Failed fetching table items' }),
+            body: JSON.stringify({ message: "Failed fetching table items" }),
         };
     }
 };
@@ -231,93 +234,87 @@ export const getUserController = async (token: string): Promise<response> => {
 export const updateUserController = async (token: string, name: string, userName: string, password: string, role: string, mobile: string): Promise<response> => {
     try {
       
-        const secretKey = process.env.JWT_SECRET || ''
+        const secretKey = process.env.JWT_SECRET || "";
 
         const decodedToken: any = jwt.verify(token, secretKey);
 
-        console.log(decodedToken)
+        console.log(decodedToken);
 
         if(!decodedToken || !decodedToken.UserName) {
-            console.log('decodedToken',decodedToken)
+            console.log("decodedToken",decodedToken);
             return {
                 statusCode: 401,
-                body: JSON.stringify({ message: 'Unauthorized' }),
+                body: JSON.stringify({ message: "Unauthorized" }),
             };
         }
 
-        // const { userName, password, name, role, mobile } = user;
-
-        const hashedPassword = await bcrypt.hash(password, 8);
-
-        const updateExpression = 'SET #password = :password, #name = :name, #role = :role';
+        const updateExpression = "SET #name = :name, #role = :role";
         const expressionAttributeNames = {
-            '#password': 'Password',
-            '#name': 'Name',
-            '#role': 'Role',
+            "#name": "Name",
+            "#role": "Role",
         };
         const expressionAttributeValues = {
-            ':password': hashedPassword,
-            ':name': name,
-            ':role': role,
-        }
+            ":name": name,
+            ":role": role,
+        };
 
         const params = {
-            TableName: process.env.USERS_TABLE || '',
+            TableName: process.env.USERS_TABLE || "",
             Key: {
-            'UserName': userName,
-            'MobileNumber': mobile
+                "UserName": userName,
+                "MobileNumber": mobile
             },
             UpdateExpression: updateExpression,
             ExpressionAttributeNames: expressionAttributeNames,
             ExpressionAttributeValues: expressionAttributeValues,
-            ReturnValues: 'ALL_NEW'
+            ReturnValues: "ALL_NEW"
         };
 
         const data = await dynamodb.update(params).promise();
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Profile updated successfully!' })
-        }
+            body: JSON.stringify({ message: "Profile updated successfully!" })
+        };
 
     } catch(error) {
-        console.error('Error while updating user profile:', error);
+        console.error("Error while updating user profile:", error);
     
         return {
             statusCode: 500,
-            body: JSON.stringify({ message: 'Failed to update user profile' }),
+            body: JSON.stringify({ message: "Failed to update user profile" }),
         };
     }
-}
+};
 
 export const changePasswordController = async (token: string, userName: string, mobile: string, oldPassword: string, newPassword: string): Promise<response> => {
     try {
-        const secretKey = process.env.JWT_SECRET || ''
+        const secretKey = process.env.JWT_SECRET || "";
 
         const decodedToken: any = jwt.verify(token, secretKey);
 
-        console.log(decodedToken)
+        console.log(decodedToken);
 
         if(!decodedToken || !decodedToken.UserName) {
-            console.log('decodedToken',decodedToken)
+            console.log("decodedToken",decodedToken);
             return {
                 statusCode: 401,
-                body: JSON.stringify({ message: 'Unauthorized' }),
+                body: JSON.stringify({ message: "Unauthorized" }),
             };
         }
 
         const userNameFromToken = decodedToken.UserName;
 
-        const user = await getUserFromDb(userNameFromToken)
-        console.log('user in getuser',user)
+        const user = await getUserFromDb(userNameFromToken);
+        console.log("user in getuser",user);
 
         const oldPasswordMatch = await verifyPassword(userName, oldPassword, mobile);
-        console.log(oldPasswordMatch)
+        console.log(oldPasswordMatch);
 
         if(!oldPasswordMatch) {
             return {
-            statusCode: 400,
-            body: JSON.stringify({ message: 'Old password is incorrect' }),
+                statusCode: 400,
+                body: JSON.stringify({ message: "Old password is incorrect" }),
             };
         }
 
@@ -326,45 +323,45 @@ export const changePasswordController = async (token: string, userName: string, 
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Password changed successfully', updatedUser })
-        }
+            body: JSON.stringify({ message: "Password changed successfully", updatedUser })
+        };
 
     } catch(error) {
-        console.error('Error while changing password:', error);
+        console.error("Error while changing password:", error);
     
         return {
             statusCode: 500,
-            body: JSON.stringify({ message: 'Changing password failed' }),
+            body: JSON.stringify({ message: "Changing password failed" }),
         };
     }
-}
+};
 
 const verifyPassword = async (userName: string, password: string, mobile: string) => {
     const user = await getUserFromDb(userName);
-    console.log(user[0])
+    console.log(user[0]);
 
-    const passwordFromDb: string = user[0].Password
-    console.log(passwordFromDb)
+    const passwordFromDb: string = user[0].Password;
+    console.log(passwordFromDb);
 
     if(!passwordFromDb || passwordFromDb?.length === 0) {
         return false;
     }
 
-    return await bcrypt.compare(password, passwordFromDb)
-}
+    return await bcrypt.compare(password, passwordFromDb);
+};
 
 const updatePassword = async (userName: string, password: string, mobile: string) => {
     try {
 
         const params = {
-            TableName: process.env.USERS_TABLE || '',
+            TableName: process.env.USERS_TABLE || "",
             Key: {
-                'UserName': userName,
-                'MobileNumber': mobile
+                "UserName": userName,
+                "MobileNumber": mobile
             },
-            UpdateExpression: 'SET Password = :password',
+            UpdateExpression: "SET Password = :password",
             ExpressionAttributeValues: {
-                ':password': password
+                ":password": password
             }
         };
 
@@ -372,7 +369,7 @@ const updatePassword = async (userName: string, password: string, mobile: string
         return updatedUser;
 
     } catch(error) {
-        console.error('Error while updating password:', error);
+        console.error("Error while updating password:", error);
         throw error;
     }
-}
+};

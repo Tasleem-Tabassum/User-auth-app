@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -17,6 +19,17 @@
     "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^20.3.3",
     "@types/uuid": "^9.0.2",
+    "eslint": "^8.44.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-graphql": "^4.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.0.0",
     "serverless-offline": "^12.0.4",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.5"
@@ -25,6 +38,8 @@
     "@apollo/server": "^4.7.5",
     "@as-integrations/aws-lambda": "^2.0.1",
     "@types/aws-lambda": "^8.10.119",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
     "apollo-server": "^3.12.0",
     "apollo-server-lambda": "^3.12.0",
     "aws-lambda": "^1.0.7",

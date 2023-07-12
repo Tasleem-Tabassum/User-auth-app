@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 export interface User {
     id?: string;
     name?: string;

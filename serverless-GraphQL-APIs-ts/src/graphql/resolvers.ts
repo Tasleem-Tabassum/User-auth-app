@@ -1,3 +1,5 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { signUpController, loginController, getUserController, changePasswordController, updateUserController } from "../controllers/userControllers";
 import { SignUpInput, LoginInput, GetUserInput, ChangePasswordInput, UpdateUserInput } from "../models/interfaces";
 
@@ -11,7 +13,7 @@ export const resolvers = {
                     userName: "sam123@gmail.com",
                     password: "password",
                     role: "admin",
-                    mobile: '7634535',
+                    mobile: "7634535",
                     createdAt: "28-06-2023"
                 }
             ];
@@ -34,18 +36,18 @@ export const resolvers = {
             
                 if (response) {
                     return {
-                    statusCode: response.statusCode,
-                    body: {
-                        message: response.body
-                    }
+                        statusCode: response.statusCode,
+                        body: {
+                            message: response.body
+                        }
                     };
                 } else {
                     console.log(response);
                     return {
-                    statusCode: 500,
-                    body: {
-                        message: "Something went wrong. Please try later"
-                    }
+                        statusCode: 500,
+                        body: {
+                            message: "Something went wrong. Please try later"
+                        }
                     };
                 }
             } catch (e) {
@@ -53,7 +55,7 @@ export const resolvers = {
                 return {
                     statusCode: 500,
                     body: {
-                    message: "Internal Server Error"
+                        message: "Internal Server Error"
                     }
                 };
             }
@@ -61,24 +63,24 @@ export const resolvers = {
 
         login: async (_: any, { input }: { input: LoginInput }) => {
             try {
-                const response = await loginController(input.userName, input.password, input.mobile)
+                const response = await loginController(input.userName, input.password, input.mobile);
 
-                console.log("login resolver response", response)
+                console.log("login resolver response", response);
 
                 if (response) {
                     return {
-                    statusCode: response.statusCode,
-                    body: {
-                        message: response.body
-                    }
+                        statusCode: response.statusCode,
+                        body: {
+                            message: response.body
+                        }
                     };
                 } else {
                     console.log(response);
                     return {
-                    statusCode: 500,
-                    body: {
-                        message: "Something went wrong. Please try later"
-                    }
+                        statusCode: 500,
+                        body: {
+                            message: "Something went wrong. Please try later"
+                        }
                     };
                 }
             } catch (e) {
@@ -86,7 +88,7 @@ export const resolvers = {
                 return {
                     statusCode: 500,
                     body: {
-                    message: "Internal Server Error"
+                        message: "Internal Server Error"
                     }
                 };
             }         
@@ -94,24 +96,24 @@ export const resolvers = {
 
         getUser: async (_: any, { input }: { input: GetUserInput}) => {
             try {
-                const response = await getUserController(input.token)
+                const response = await getUserController(input.token);
 
-                console.log("getUser resolver response", response)
+                console.log("getUser resolver response", response);
 
                 if (response) {
                     return {
-                    statusCode: response.statusCode,
-                    body: {
-                        message: response.body
-                    }
+                        statusCode: response.statusCode,
+                        body: {
+                            message: response.body
+                        }
                     };
                 } else {
                     console.log(response);
                     return {
-                    statusCode: 500,
-                    body: {
-                        message: "Something went wrong. Please try later"
-                    }
+                        statusCode: 500,
+                        body: {
+                            message: "Something went wrong. Please try later"
+                        }
                     };
                 }
             } catch (e) {
@@ -119,7 +121,7 @@ export const resolvers = {
                 return {
                     statusCode: 500,
                     body: {
-                    message: "Internal Server Error"
+                        message: "Internal Server Error"
                     }
                 };
             }
@@ -133,24 +135,24 @@ export const resolvers = {
                     input.mobile,
                     input.oldPassword,
                     input.newPassword,
-                )
+                );
 
-                console.log("changePassword resolver response", response)
+                console.log("changePassword resolver response", response);
 
                 if (response) {
                     return {
-                    statusCode: response.statusCode,
-                    body: {
-                        message: response.body
-                    }
+                        statusCode: response.statusCode,
+                        body: {
+                            message: response.body
+                        }
                     };
                 } else {
                     console.log(response);
                     return {
-                    statusCode: 500,
-                    body: {
-                        message: "Something went wrong. Please try later"
-                    }
+                        statusCode: 500,
+                        body: {
+                            message: "Something went wrong. Please try later"
+                        }
                     };
                 }
             } catch (e) {
@@ -158,7 +160,7 @@ export const resolvers = {
                 return {
                     statusCode: 500,
                     body: {
-                    message: "Internal Server Error"
+                        message: "Internal Server Error"
                     }
                 };
             }
@@ -173,24 +175,24 @@ export const resolvers = {
                     input.password,
                     input.role,
                     input.mobile
-                )
+                );
 
-                console.log("updateUser resolver response", response)
+                console.log("updateUser resolver response", response);
 
                 if (response) {
                     return {
-                    statusCode: response.statusCode,
-                    body: {
-                        message: response.body
-                    }
+                        statusCode: response.statusCode,
+                        body: {
+                            message: response.body
+                        }
                     };
                 } else {
                     console.log(response);
                     return {
-                    statusCode: 500,
-                    body: {
-                        message: "Something went wrong. Please try later"
-                    }
+                        statusCode: 500,
+                        body: {
+                            message: "Something went wrong. Please try later"
+                        }
                     };
                 }
             } catch (e) {
@@ -198,7 +200,7 @@ export const resolvers = {
                 return {
                     statusCode: 500,
                     body: {
-                    message: "Internal Server Error"
+                        message: "Internal Server Error"
                     }
                 };
             }

@@ -1,4 +1,5 @@
-import { gql } from '@apollo/client';
+/* eslint-disable linebreak-style */
+import { gql } from "@apollo/client";
 
 export const SIGNUP_USER = gql`
     mutation SignUp($input: SignUpInput!) {
