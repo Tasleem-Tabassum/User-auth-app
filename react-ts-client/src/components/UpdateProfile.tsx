@@ -22,12 +22,10 @@ const theme = createTheme({
 const useStyles = makeStyles((theme) => ({
     updateButton: {
         alignSelf: "center",
-        // paddingLeft: '25px'
         margin: "0px 0px 0px 0px"
     },
     cancelButton: {
         alignSelf: "center",
-        // paddingLeft: '25px'
         margin: "0px 0px 0px 30px"
     },
     userHeader: {
@@ -93,8 +91,6 @@ const useStyles = makeStyles((theme) => ({
     Group3: {
         paddingLeft: "30px",
         marginBottom: "10px"
-        // paddingRight: "15px",
-        // paddingBottom: "15px",
     },
 }));
 
@@ -129,9 +125,6 @@ const UpdateProfile: React.FC = () => {
 
     const fetchUserDetails = async (token: string) => {
         try {
-            console.log("entered fetch user");
-
-            console.log("token",token);
 
             const response = await getUser({
                 variables: { input: { token } }
@@ -139,12 +132,7 @@ const UpdateProfile: React.FC = () => {
        
             const parsedData = JSON.parse(response.data.getUser.body.message);
 
-            //console.log(parsedData.user[0])
-
             const userData = parsedData.user[0];
-
-            // localStorage.setItem('userName', userData.UserName)
-            // localStorage.setItem('mobile', userData.MobileNumber)
 
             setUser({ ...user, userName: userData.UserName, name: userData.Name, role: userData.Role});
 
@@ -165,15 +153,11 @@ const UpdateProfile: React.FC = () => {
                 variables: { input: { token, name: user.name, userName: user.userName, role: user.role } }
             });
     
-            console.log("Response from login client",response);
-
             if(response) {
                 const statusCode = response.data?.updateUser?.statusCode;
 
                 if(statusCode === 200) {
                     const body = JSON.parse(response?.data?.updateUser?.body?.message);
-
-                    console.log(body.message);
 
                     setServerResponseStatus("success");
 
@@ -188,8 +172,6 @@ const UpdateProfile: React.FC = () => {
 
                 else {
                     const body = JSON.parse(response?.data?.updateUser?.body?.message);
-
-                    console.log(body.message);
 
                     setServerResponseStatus("error");
 
@@ -250,40 +232,8 @@ const UpdateProfile: React.FC = () => {
                                     required
                                 />
                                 <br/>
-                                {/* <label htmlFor='password' className={classes.label}>
-                                    Password:
-                                </label>
-                                <TextField 
-                                    variant="outlined"
-                                    type='password'
-                                    name='password'
-                                    id='password'
-                                    placeholder='Please enter password...'
-                                    className={classes.textField}
-                                    // onChange={(e) => setUser({...user, password: e.target.value})}
-                                    value={user.password}
-                                    required
-                                    disabled
-                                />
-                                <br/> */}
                             </div>
                             <div className={classes.Group2}>
-                                {/* <label htmlFor='mobile' className={classes.label}>
-                                    Mobile Number:
-                                </label>
-                                <TextField 
-                                    variant="outlined"
-                                    type='number'
-                                    name='mobile'
-                                    id='mobile'
-                                    placeholder='Please enter mobile number...'
-                                    className={classes.textField}
-                                    // onChange={(e) => setUser({...user, mobile: parseInt(e.target.value)})}
-                                    value={user.mobile}
-                                    required
-                                    disabled
-                                />
-                                <br/> */}
                                 <label htmlFor='username' className={classes.label}>
                                     UserName:
                                 </label>
@@ -294,7 +244,6 @@ const UpdateProfile: React.FC = () => {
                                     id='username'
                                     placeholder='Please enter username...'
                                     className={classes.textField}
-                                    // onChange={(e) => setUser({...user, userName: e.target.value})}
                                     value={user.userName}
                                     required
                                     disabled

@@ -31,9 +31,7 @@ export const resolvers = {
                     input.role,
                     input.mobile
                 );
-          
-                console.log("Signup resolver response", response);
-            
+                      
                 if (response) {
                     return {
                         statusCode: response.statusCode,
@@ -42,7 +40,6 @@ export const resolvers = {
                         }
                     };
                 } else {
-                    console.log(response);
                     return {
                         statusCode: 500,
                         body: {
@@ -63,9 +60,7 @@ export const resolvers = {
 
         login: async (_: any, { input }: { input: LoginInput }) => {
             try {
-                const response = await loginController(input.userName, input.password /*, input.mobile*/);
-
-                console.log("login resolver response", response);
+                const response = await loginController(input.userName, input.password);
 
                 if (response) {
                     return {
@@ -75,7 +70,6 @@ export const resolvers = {
                         }
                     };
                 } else {
-                    console.log(response);
                     return {
                         statusCode: 500,
                         body: {
@@ -98,8 +92,6 @@ export const resolvers = {
             try {
                 const response = await getUserController(input.token);
 
-                console.log("getUser resolver response", response);
-
                 if (response) {
                     return {
                         statusCode: response.statusCode,
@@ -108,7 +100,6 @@ export const resolvers = {
                         }
                     };
                 } else {
-                    console.log(response);
                     return {
                         statusCode: 500,
                         body: {
@@ -136,8 +127,6 @@ export const resolvers = {
                     input.newPassword,
                 );
 
-                console.log("changePassword resolver response", response);
-
                 if (response) {
                     return {
                         statusCode: response.statusCode,
@@ -146,7 +135,6 @@ export const resolvers = {
                         }
                     };
                 } else {
-                    console.log(response);
                     return {
                         statusCode: 500,
                         body: {
@@ -174,8 +162,6 @@ export const resolvers = {
                     input.role,
                 );
 
-                console.log("updateUser resolver response", response);
-
                 if (response) {
                     return {
                         statusCode: response.statusCode,
@@ -184,7 +170,6 @@ export const resolvers = {
                         }
                     };
                 } else {
-                    console.log(response);
                     return {
                         statusCode: 500,
                         body: {

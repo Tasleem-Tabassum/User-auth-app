@@ -23,8 +23,6 @@ const useStyles = makeStyles((theme) => ({
     signupButton: {
         alignSelf: "center",
         color: "#1976d2"
-    // paddingLeft: '25px'
-    // marginLeft: '30px'
     },
     signupHeader: {
         fontSize: "35px",
@@ -116,21 +114,17 @@ const Signup: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(user);
 
         try{
             const response = await signUpUser({
                 variables: { input: user }
             });
 
-            console.log("Loading.....", loading);
             if(response) {
                 const statusCode = response.data?.signUp?.statusCode;
 
                 if(statusCode === 201) {
                     const body = JSON.parse(response?.data?.signUp?.body?.message);
-
-                    console.log(body.message);
 
                     setServerResponseStatus("success");
 
@@ -146,8 +140,6 @@ const Signup: React.FC = () => {
                 else {
                     const body = JSON.parse(response?.data?.signUp?.body?.message);
 
-                    console.log(body.message);
-
                     setServerResponseStatus("error");
 
                     setServerResponse(body.message);
@@ -158,9 +150,6 @@ const Signup: React.FC = () => {
         } catch(e) {
             console.log("ERROR while client signup!",e);
         }
-
-
-    //navigate('/user')
     };
 
     return (

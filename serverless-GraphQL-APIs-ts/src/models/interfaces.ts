@@ -20,7 +20,6 @@ export interface SignUpInput {
 export interface LoginInput {
     userName: string;
     password: string;
-    // mobile: string;
 }
 
 export interface GetUserInput {

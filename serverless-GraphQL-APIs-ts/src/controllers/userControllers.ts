@@ -11,8 +11,6 @@ import { response } from "../models/response";
 export const signUpController = async (name: string, userName: string, password: string, role: string, mobile: string): Promise<response> => {
     try {
 
-        console.log(userName, password, name, mobile, role);
-
         if(!userName || !password || !name || !mobile || !role) {
             return {
                 statusCode: 400,
@@ -50,7 +48,6 @@ export const signUpController = async (name: string, userName: string, password:
         };
 
         const userData = await dynamodb.query(queryDataParams).promise();
-        console.log("user after query",userData);
 
         if((userData.Items?.length) && (userData.Items[0]?.UserName !== undefined)) {
             return {
@@ -60,26 +57,6 @@ export const signUpController = async (name: string, userName: string, password:
                 })
             };
         }
-
-        // const queryDataParamsForMobile = {
-        //     TableName: process.env.USERS_TABLE || "",
-        //     KeyConditionExpression: "MobileNumber = :mobile",
-        //     ExpressionAttributeValues: {
-        //         ":mobile": mobile
-        //     }
-        // };
-
-        // const userDataFromMobile = await dynamodb.query(queryDataParamsForMobile).promise();
-        // console.log("user after query", userDataFromMobile);
-
-        // if((userDataFromMobile.Items?.length) && (userDataFromMobile.Items[0]?.MobileNumber !== undefined)) {
-        //     return {
-        //         statusCode: 400,
-        //         body: JSON.stringify({
-        //             message: "User already exists!"
-        //         })
-        //     };
-        // }
 
         const passwordHash = await bcrypt.hash(password, 8);
 
@@ -125,7 +102,6 @@ export const getUserFromDb = async (userName: string): Promise<any> => {
 
     try {
         const data = await dynamodb.query(params).promise();
-        console.log("data from query", data.Items);
         return data.Items;
     } catch (error) {
         console.log("Error occurred while scanning data from DynamoDB", error);
@@ -133,7 +109,7 @@ export const getUserFromDb = async (userName: string): Promise<any> => {
     }
 };
 
-export const loginController = async (userName: string, password: string/*, mobile: string*/): Promise<response> => {
+export const loginController = async (userName: string, password: string): Promise<response> => {
     try {
         if(!userName || !password) {
             return {
@@ -150,9 +126,7 @@ export const loginController = async (userName: string, password: string/*, mobi
         }
     
         const user = await getUserFromDb(userName);
-    
-        console.log("user retrieved from db", user);
-    
+        
         if (!user || user.length === 0 || !user[0].Password) {
             return {
                 statusCode: 404,
@@ -163,21 +137,17 @@ export const loginController = async (userName: string, password: string/*, mobi
         const userPassword = user[0].Password;
     
         const isMatch = await bcrypt.compare(password, userPassword);
-    
-        console.log("Comparing passwords:", isMatch);
-    
+        
         if (!isMatch) {
             return {
                 statusCode: 401,
                 body: "Invalid password",
             };
         } else {
-            console.log("Before generating token");
             const secretKey = process.env.JWT_SECRET || "";
             const token = jwt.sign({UserName: userName}, secretKey, {
                 expiresIn: 3600
             });
-            console.log("Before generating token");
     
             return {
                 statusCode: 200,
@@ -198,18 +168,11 @@ export const loginController = async (userName: string, password: string/*, mobi
 export const getUserController = async (token: string): Promise<response> => {
     try {
   
-        // const authToken = event.headers?.authorization || '';
-  
-        // const token = authToken.split(' ')[1];
-  
         const secretKey = process.env.JWT_SECRET || "";
   
         const decodedToken: any = jwt.verify(token, secretKey);
-  
-        console.log(decodedToken);
-  
-        if(/*!authToken || */!decodedToken || !decodedToken.UserName) {
-            console.log("decodedToken", decodedToken);
+    
+        if(!decodedToken || !decodedToken.UserName) {
             return {
                 statusCode: 401,
                 body: JSON.stringify({ message: "Unauthorized" }),
@@ -219,7 +182,6 @@ export const getUserController = async (token: string): Promise<response> => {
         const userName = decodedToken.UserName;
   
         const user = await getUserFromDb(userName);
-        console.log("user in getuser",user);
   
         if(!user) {
             return {
@@ -249,10 +211,7 @@ export const updateUserController = async (token: string, name: string, userName
 
         const decodedToken: any = jwt.verify(token, secretKey);
 
-        console.log(decodedToken);
-
         if(!decodedToken || !decodedToken.UserName) {
-            console.log("decodedToken",decodedToken);
             return {
                 statusCode: 401,
                 body: JSON.stringify({ message: "Unauthorized" }),
@@ -310,10 +269,7 @@ export const changePasswordController = async (token: string, userName: string, 
 
         const decodedToken: any = jwt.verify(token, secretKey);
 
-        console.log(decodedToken);
-
         if(!decodedToken || !decodedToken.UserName) {
-            console.log("decodedToken",decodedToken);
             return {
                 statusCode: 401,
                 body: JSON.stringify({ message: "Unauthorized" }),
@@ -323,12 +279,10 @@ export const changePasswordController = async (token: string, userName: string, 
         const userNameFromToken = decodedToken.UserName;
 
         const user = await getUserFromDb(userNameFromToken);
-        console.log("user in getuser",user);
 
         const mobile = user[0].MobileNumber;
 
         const oldPasswordMatch = await verifyPassword(userName, oldPassword, mobile);
-        console.log(oldPasswordMatch);
 
         if(!oldPasswordMatch) {
             return {
@@ -357,10 +311,8 @@ export const changePasswordController = async (token: string, userName: string, 
 
 const verifyPassword = async (userName: string, password: string, mobile: string) => {
     const user = await getUserFromDb(userName);
-    console.log(user[0]);
 
     const passwordFromDb: string = user[0].Password;
-    console.log(passwordFromDb);
 
     if(!passwordFromDb || passwordFromDb?.length === 0) {
         return false;

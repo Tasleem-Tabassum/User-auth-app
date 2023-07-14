@@ -142,9 +142,6 @@ const User: React.FC = () => {
 
     const fetchUserDetails = async (token: string) => {
         try {
-            console.log("entered fetch user");
-
-            console.log("token",token);
 
             const response = await getUser({
                 variables: { input: { token } }
@@ -152,12 +149,7 @@ const User: React.FC = () => {
        
             const parsedData = JSON.parse(response.data.getUser.body.message);
 
-            console.log(parsedData.user[0]);
-
             const userData = parsedData.user[0];
-
-            // localStorage.setItem('userName', userData.UserName)
-            // localStorage.setItem('mobile', userData.MobileNumber)
 
             setUser({ userName: userData.UserName, mobile: userData.MobileNumber, name: userData.Name, role: userData.Role, password: userData.Password});
 

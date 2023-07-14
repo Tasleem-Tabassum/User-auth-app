@@ -22,12 +22,10 @@ const theme = createTheme({
 const useStyles = makeStyles((theme) => ({
     updateButton: {
         alignSelf: "center",
-        // paddingLeft: '25px'
         margin: "0px 0px 0px 0px"
     },
     cancelButton: {
         alignSelf: "center",
-        // paddingLeft: '25px'
         margin: "0px 0px 0px 10px"
     },
     userHeader: {

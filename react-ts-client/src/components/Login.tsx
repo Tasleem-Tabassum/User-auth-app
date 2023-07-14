@@ -84,7 +84,6 @@ const Login: React.FC = () => {
 
     const [user, setUser] = React.useState({
         userName: "",
-        // mobile: "",
         password: ""
     });
 
@@ -96,7 +95,6 @@ const Login: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(user);
 
         try{
             const response = await loginUser({
@@ -110,7 +108,6 @@ const Login: React.FC = () => {
                 if(statusCode === 200) {
                     const body = JSON.parse(response?.data?.login?.body?.message);
 
-                    console.log(body.message);
                     localStorage.setItem("token", body.token);
 
                     setServerResponseStatus("success");
@@ -124,8 +121,6 @@ const Login: React.FC = () => {
 
                 else {
                     const body = response?.data?.login?.body?.message;
-
-                    console.log(body);
 
                     setServerResponseStatus("error");
 
@@ -166,21 +161,6 @@ const Login: React.FC = () => {
                                 required
                             />
                             <br/>
-                            {/* <label htmlFor='mobile' className={classes.label}>
-                                Mobile Number:
-                            </label>
-                            <TextField 
-                                variant="outlined"
-                                type='number'
-                                name='mobile'
-                                id='mobile'
-                                placeholder='Please enter mobile number...'
-                                className={classes.textField}
-                                onChange={(e) => setUser({...user, mobile: e.target.value})}
-                                value={user.mobile}
-                                required
-                            />
-                            <br/> */}
                             <label htmlFor='password' className={classes.label}>
                                 Password:
                             </label>
