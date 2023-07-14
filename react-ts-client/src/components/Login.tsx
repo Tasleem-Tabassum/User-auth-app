@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { Button, TextField, makeStyles, createTheme, ThemeProvider } from "@material-ui/core";
+import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { Alert, AlertColor } from "@mui/material";
@@ -10,10 +11,10 @@ import { LOGIN_USER } from "../graphql/mutation";
 const theme = createTheme({
     palette: {
         primary: {
-            main: "#f02726",
+            main: "#1976d2",
         },
         secondary: {
-            main: "#cccccc",
+            main: "#f02726",
         },
     }
 });
@@ -23,9 +24,10 @@ const useStyles = makeStyles((theme) => ({
         alignSelf: "center",
     },
     loginHeader: {
-        fontSize: "24px",
+        fontSize: "35px",
+        fontWeight: "bold",
         margin: "30px 0",
-        color: "#969696",
+        color: "#1976d2",
         textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
     },
     loginPage: {
@@ -34,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        color: "#868686",
+        backgroundColor: "#DFDFDF",
+        color: "#40424D",
         fontFamily: "Arial, sans-serif",
         fontSize: "16px",
         lineHeight: "1.5",
@@ -45,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "space-between",
         alignItems: "center",
         color: "#868686",
+        backgroundColor: "#ffffff",
         fontFamily: "Arial, sans-serif",
         fontSize: "16px",
         lineHeight: "1.5",
@@ -57,6 +61,8 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         alignItems: "center",
         marginBottom: theme.spacing(1),
+        color: "#1976d2",
+        fontSize: "18px",
     },
 
     textField: {
@@ -78,7 +84,7 @@ const Login: React.FC = () => {
 
     const [user, setUser] = React.useState({
         userName: "",
-        mobile: "",
+        // mobile: "",
         password: ""
     });
 
@@ -113,9 +119,7 @@ const Login: React.FC = () => {
 
                     setShowAlert(true);
 
-                    setTimeout(() => {
-                        navigate("/user");
-                    }, 2000);
+                    navigate("/user");
                 }
 
                 else {
@@ -141,14 +145,14 @@ const Login: React.FC = () => {
         <ThemeProvider theme={theme}>
             <div className={classes.loginPage}>
                 <span className={classes.loginHeader}>
-          USER LOGIN
+                    USER LOGIN
                 </span>
                 <div className={classes.loginBlock}>
                     <form onSubmit={(e) => handleSubmit(e)} method='POST'>
                         <div className={classes.formGroup}>
               
                             <label htmlFor='username' className={classes.label}>
-                UserName:
+                                UserName:
                             </label>
                             <TextField 
                                 variant="outlined"
@@ -162,8 +166,8 @@ const Login: React.FC = () => {
                                 required
                             />
                             <br/>
-                            <label htmlFor='mobile' className={classes.label}>
-                Mobile Number:
+                            {/* <label htmlFor='mobile' className={classes.label}>
+                                Mobile Number:
                             </label>
                             <TextField 
                                 variant="outlined"
@@ -176,9 +180,9 @@ const Login: React.FC = () => {
                                 value={user.mobile}
                                 required
                             />
-                            <br/>
+                            <br/> */}
                             <label htmlFor='password' className={classes.label}>
-                Password:
+                                Password:
                             </label>
                             <TextField 
                                 variant="outlined"
@@ -192,14 +196,14 @@ const Login: React.FC = () => {
                                 required
                             />
                             <br/>
-                            <Button variant='outlined' color='primary' type='submit' className={classes.loginButton}>
-                Login
-                            </Button>
+                            <LoadingButton loading={loading} variant='contained' color='primary' type='submit' className={classes.loginButton}>
+                                Login
+                            </LoadingButton>
 
                             {showAlert && 
-                (<Alert severity={serverResponseStatus as AlertColor}>
-                    {serverResponse}
-                </Alert>)}
+                                (<Alert severity={serverResponseStatus as AlertColor}>
+                                    {serverResponse}
+                                </Alert>)}
                         </div>
                     </form>
                 </div>

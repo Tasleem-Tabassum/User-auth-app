@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect } from "react";
 import { Button, TextField, makeStyles, createTheme, ThemeProvider } from "@material-ui/core";
+import { LoadingButton } from "@mui/lab";
 import { Alert, AlertColor } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
@@ -10,10 +11,10 @@ import { UPDATE_PROFILE, GET_USER } from "../graphql/mutation";
 const theme = createTheme({
     palette: {
         primary: {
-            main: "#f02726",
+            main: "#1976d2",
         },
         secondary: {
-            main: "#cccccc",
+            main: "#f02726",
         },
     }
 });
@@ -22,41 +23,39 @@ const useStyles = makeStyles((theme) => ({
     updateButton: {
         alignSelf: "center",
         // paddingLeft: '25px'
-        margin: "0px 30px 30px 0px"
+        margin: "0px 0px 0px 0px"
     },
     cancelButton: {
         alignSelf: "center",
         // paddingLeft: '25px'
-        margin: "0px 0px 30px 0px"
+        margin: "0px 0px 0px 30px"
     },
-    signupButton: {
-        alignSelf: "center",
-    // paddingLeft: '25px'
-    // marginLeft: '30px'
-    },
-    signupHeader: {
-        fontSize: "24px",
+    userHeader: {
+        fontSize: "35px",
+        fontWeight: "bold",
         margin: "30px 0",
-        color: "#969696",
+        color: "#1976d2",
         textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
     },
-    signupPage: {
+    userPage: {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        color: "#868686",
+        color: "#40424D",
+        backgroundColor: "#DFDFDF",
         fontFamily: "Arial, sans-serif",
         fontSize: "16px",
         lineHeight: "1.5",
     
     },
-    signupBlock: {
+    userBlock: {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         color: "#868686",
+        backgroundColor: "#ffffff",
         fontFamily: "Arial, sans-serif",
         fontSize: "16px",
         lineHeight: "1.5",
@@ -70,6 +69,8 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         alignItems: "center",
         marginBottom: theme.spacing(1),
+        color: "#1976d2",
+        fontSize: "18px",
     },
 
     textField: {
@@ -91,9 +92,10 @@ const useStyles = makeStyles((theme) => ({
     },
     Group3: {
         paddingLeft: "30px",
-        paddingRight: "15px",
-        paddingBottom: "15px",
-    }
+        marginBottom: "10px"
+        // paddingRight: "15px",
+        // paddingBottom: "15px",
+    },
 }));
 
 const UpdateProfile: React.FC = () => {
@@ -110,8 +112,6 @@ const UpdateProfile: React.FC = () => {
 
     const [user, setUser] = React.useState({
         userName: "",
-        mobile: "",
-        password: "",
         role: "",
         name: ""
     });
@@ -146,7 +146,7 @@ const UpdateProfile: React.FC = () => {
             // localStorage.setItem('userName', userData.UserName)
             // localStorage.setItem('mobile', userData.MobileNumber)
 
-            setUser({ ...user, userName: userData.UserName, mobile: userData.MobileNumber, name: userData.Name, role: userData.Role, password: userData.Password});
+            setUser({ ...user, userName: userData.UserName, name: userData.Name, role: userData.Role});
 
         } catch(e) {
             console.log("ERROR!", e);
@@ -162,14 +162,13 @@ const UpdateProfile: React.FC = () => {
         try {
 
             const response = await updateUser({
-                variables: { input: { token, name: user.name, userName: user.userName, role: user.role, mobile: user.mobile, password: user.password } }
+                variables: { input: { token, name: user.name, userName: user.userName, role: user.role } }
             });
     
             console.log("Response from login client",response);
 
             if(response) {
                 const statusCode = response.data?.updateUser?.statusCode;
-
 
                 if(statusCode === 200) {
                     const body = JSON.parse(response?.data?.updateUser?.body?.message);
@@ -184,7 +183,7 @@ const UpdateProfile: React.FC = () => {
 
                     setTimeout(() => {
                         navigate("/user");
-                    }, 2000);
+                    }, 1000);
                 }
 
                 else {
@@ -213,16 +212,16 @@ const UpdateProfile: React.FC = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            {isTokenAvailable ? (<div className={classes.signupPage}>
-                <span className={classes.signupHeader}>
-          UPDATE PROFILE
+            {isTokenAvailable ? (<div className={classes.userPage}>
+                <span className={classes.userHeader}>
+                    UPDATE PROFILE
                 </span>
-                <div className={classes.signupBlock}>
+                <div className={classes.userBlock}>
                     <form>
                         <div className={classes.formGroup}>
                             <div className={classes.Group1}>
                                 <label htmlFor='name' className={classes.label}>
-                Name:
+                                    Name:
                                 </label>
                                 <TextField 
                                     variant="outlined"
@@ -236,58 +235,8 @@ const UpdateProfile: React.FC = () => {
                                     required
                                 />
                                 <br/>
-                                <label htmlFor='username' className={classes.label}>
-                UserName:
-                                </label>
-                                <TextField 
-                                    variant="outlined"
-                                    type='text'
-                                    name='username'
-                                    id='username'
-                                    placeholder='Please enter username...'
-                                    className={classes.textField}
-                                    // onChange={(e) => setUser({...user, userName: e.target.value})}
-                                    value={user.userName}
-                                    required
-                                    disabled
-                                />
-                                <br/>
-                                <label htmlFor='password' className={classes.label}>
-                Password:
-                                </label>
-                                <TextField 
-                                    variant="outlined"
-                                    type='password'
-                                    name='password'
-                                    id='password'
-                                    placeholder='Please enter password...'
-                                    className={classes.textField}
-                                    // onChange={(e) => setUser({...user, password: e.target.value})}
-                                    value={user.password}
-                                    required
-                                    disabled
-                                />
-                                <br/>
-                            </div>
-                            <div className={classes.Group2}>
-                                <label htmlFor='mobile' className={classes.label}>
-                Mobile Number:
-                                </label>
-                                <TextField 
-                                    variant="outlined"
-                                    type='number'
-                                    name='mobile'
-                                    id='mobile'
-                                    placeholder='Please enter mobile number...'
-                                    className={classes.textField}
-                                    // onChange={(e) => setUser({...user, mobile: parseInt(e.target.value)})}
-                                    value={user.mobile}
-                                    required
-                                    disabled
-                                />
-                                <br/>
                                 <label htmlFor='role' className={classes.label}>
-                Role:
+                                    Role:
                                 </label>
                                 <TextField 
                                     variant="outlined"
@@ -301,20 +250,73 @@ const UpdateProfile: React.FC = () => {
                                     required
                                 />
                                 <br/>
+                                {/* <label htmlFor='password' className={classes.label}>
+                                    Password:
+                                </label>
+                                <TextField 
+                                    variant="outlined"
+                                    type='password'
+                                    name='password'
+                                    id='password'
+                                    placeholder='Please enter password...'
+                                    className={classes.textField}
+                                    // onChange={(e) => setUser({...user, password: e.target.value})}
+                                    value={user.password}
+                                    required
+                                    disabled
+                                />
+                                <br/> */}
+                            </div>
+                            <div className={classes.Group2}>
+                                {/* <label htmlFor='mobile' className={classes.label}>
+                                    Mobile Number:
+                                </label>
+                                <TextField 
+                                    variant="outlined"
+                                    type='number'
+                                    name='mobile'
+                                    id='mobile'
+                                    placeholder='Please enter mobile number...'
+                                    className={classes.textField}
+                                    // onChange={(e) => setUser({...user, mobile: parseInt(e.target.value)})}
+                                    value={user.mobile}
+                                    required
+                                    disabled
+                                />
+                                <br/> */}
+                                <label htmlFor='username' className={classes.label}>
+                                    UserName:
+                                </label>
+                                <TextField 
+                                    variant="outlined"
+                                    type='text'
+                                    name='username'
+                                    id='username'
+                                    placeholder='Please enter username...'
+                                    className={classes.textField}
+                                    // onChange={(e) => setUser({...user, userName: e.target.value})}
+                                    value={user.userName}
+                                    required
+                                    disabled
+                                    InputProps={{
+                                        style: { color: "black" },
+                                    }}
+                                />
+                                <br/>
                             </div>
                         </div>
                         <div className={classes.Group3}>
-                            <Button variant='outlined' color='primary' onClick={(e) => handleUpdate(e)} className={classes.updateButton}>
-                Update
-                            </Button>
-                            <Button variant='outlined' color='primary' onClick={(e) => handleCancel(e)} className={classes.cancelButton}>
-                Cancel
+                            <LoadingButton loading={loading} variant='contained' color='primary' onClick={(e) => handleUpdate(e)} className={classes.updateButton}>
+                                Update
+                            </LoadingButton>
+                            <Button variant='contained' color='primary' onClick={(e) => handleCancel(e)} className={classes.cancelButton}>
+                                Cancel
                             </Button>
 
                             {showAlert && 
-                  (<Alert severity={serverResponseStatus as AlertColor}>
-                      {serverResponse}
-                  </Alert>)}
+                                (<Alert severity={serverResponseStatus as AlertColor}>
+                                    {serverResponse}
+                                </Alert>)}
                         </div>
                     </form>
                 </div>

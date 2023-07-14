@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect } from "react";
 import { Button, TextField, makeStyles, createTheme, ThemeProvider } from "@material-ui/core";
+import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { CHANGE_PASSWORD, GET_USER } from "../graphql/mutation";
@@ -10,10 +11,10 @@ import { Alert, AlertColor } from "@mui/material";
 const theme = createTheme({
     palette: {
         primary: {
-            main: "#f02726",
+            main: "#1976d2",
         },
         secondary: {
-            main: "#cccccc",
+            main: "#f02726",
         },
     }
 });
@@ -22,17 +23,18 @@ const useStyles = makeStyles((theme) => ({
     updateButton: {
         alignSelf: "center",
         // paddingLeft: '25px'
-        margin: "0px 30px 30px 30px"
+        margin: "0px 0px 0px 0px"
     },
-    changeButton: {
+    cancelButton: {
         alignSelf: "center",
         // paddingLeft: '25px'
-        margin: "0px 0px 30px 0px"
+        margin: "0px 0px 0px 10px"
     },
     userHeader: {
-        fontSize: "24px",
+        fontSize: "35px",
+        fontWeight: "bold",
         margin: "30px 0",
-        color: "#969696",
+        color: "#1976d2",
         textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
     },
     userPage: {
@@ -41,7 +43,8 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        color: "#868686",
+        color: "#40424D",
+        backgroundColor: "#DFDFDF",
         fontFamily: "Arial, sans-serif",
         fontSize: "16px",
         lineHeight: "1.5",
@@ -52,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "space-between",
         alignItems: "center",
         color: "#868686",
+        backgroundColor: "#ffffff",
         fontFamily: "Arial, sans-serif",
         fontSize: "16px",
         lineHeight: "1.5",
@@ -65,6 +69,8 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         alignItems: "center",
         marginBottom: theme.spacing(1),
+        color: "#1976d2",
+        fontSize: "18px",
     },
 
     textField: {
@@ -85,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
         padding: "12px"
     },
     Group3: {
-    // padding: '15px'
+        paddingLeft: "30px"
     }
 }));
 
@@ -93,9 +99,9 @@ const ChangePassword: React.FC = () => {
 
     const isTokenAvailable = localStorage.getItem("token");
 
-    const [changePassword] = useMutation(CHANGE_PASSWORD);
+    const [changePassword, { loading, error }] = useMutation(CHANGE_PASSWORD);
 
-    const [getUser, { loading, error }] = useMutation(GET_USER);
+    const [getUser, /*{ loading, error }*/] = useMutation(GET_USER);
 
     const classes = useStyles();
 
@@ -103,10 +109,8 @@ const ChangePassword: React.FC = () => {
 
     const [user, setUser] = React.useState({
         userName: "",
-        mobile: "",
         oldPassword: "***********",
-        newPassword: "",
-        name: ""
+        newPassword: ""
     });
 
     const [showAlert, setShowAlert] = React.useState(false);
@@ -122,9 +126,6 @@ const ChangePassword: React.FC = () => {
 
     const fetchUserDetails = async (token: string) => {
         try {
-            console.log("entered fetch user");
-
-            console.log("token",token);
 
             const response = await getUser({
                 variables: { input: { token } }
@@ -132,14 +133,9 @@ const ChangePassword: React.FC = () => {
        
             const parsedData = JSON.parse(response.data.getUser.body.message);
 
-            console.log(parsedData.user[0]);
-
             const userData = parsedData.user[0];
 
-            // localStorage.setItem('userName', userData.UserName)
-            // localStorage.setItem('mobile', userData.MobileNumber)
-
-            setUser({ ...user, userName: userData.UserName, mobile: userData.MobileNumber, name: userData.Name});
+            setUser({ ...user, userName: userData.UserName});
 
         } catch(e) {
             console.log("ERROR!", e);
@@ -154,22 +150,16 @@ const ChangePassword: React.FC = () => {
 
         try {
 
-            console.log("token",token);
-
             const response = await changePassword({
-                variables: { input: { token, userName: user.userName, mobile: user.mobile, oldPassword: user.oldPassword, newPassword: user.newPassword } }
+                variables: { input: { token, userName: user.userName, oldPassword: user.oldPassword, newPassword: user.newPassword } }
             });
     
-            console.log("Response from login client",response);
-
             if(response) {
                 const statusCode = response.data?.changePassword?.statusCode;
 
 
                 if(statusCode === 200) {
                     const body = JSON.parse(response?.data?.changePassword?.body?.message);
-
-                    console.log(body.message);
 
                     setServerResponseStatus("success");
 
@@ -179,13 +169,11 @@ const ChangePassword: React.FC = () => {
 
                     setTimeout(() => {
                         navigate("/login");
-                    }, 2000);
+                    }, 1000);
                 }
 
                 else {
                     const body = JSON.parse(response?.data?.changePassword?.body?.message);
-
-                    console.log(body.message);
 
                     setServerResponseStatus("error");
 
@@ -210,61 +198,14 @@ const ChangePassword: React.FC = () => {
         <ThemeProvider theme={theme}>
             {isTokenAvailable ? (<div className={classes.userPage}>
                 <span className={classes.userHeader}>
-          CHANGE PASSWORD
+                    CHANGE PASSWORD
                 </span>
                 <div className={classes.userBlock}>
-                    <form> {/* onSubmit={(e) => handleSubmit(e)} method='POST'*/}
+                    <form>
                         <div className={classes.formGroup}>
-                            <div className={classes.Group1}>
-                                <label htmlFor='name' className={classes.label}>
-                  Name:
-                                </label>
-                                <TextField 
-                                    variant="outlined"
-                                    type='name'
-                                    name='name'
-                                    id='name'
-                                    placeholder='Please enter name...'
-                                    className={classes.textField}
-                                    value={user.name}
-                                    required
-                                    disabled
-                                />
-                                <br/>
-                                <label htmlFor='username' className={classes.label}>
-                  UserName:
-                                </label>
-                                <TextField 
-                                    variant="outlined"
-                                    type='text'
-                                    name='username'
-                                    id='username'
-                                    placeholder='Please enter username...'
-                                    className={classes.textField}
-                                    value={user.userName}
-                                    required
-                                    disabled
-                                />
-                                <br/>
-                                <label htmlFor='mobile' className={classes.label}>
-                  Mobile Number:
-                                </label>
-                                <TextField 
-                                    variant="outlined"
-                                    type='number'
-                                    name='mobile'
-                                    id='mobile'
-                                    placeholder='Please enter mobile number...'
-                                    className={classes.textField}
-                                    value={user.mobile}
-                                    required
-                                    disabled
-                                />
-                                <br/>
-                            </div>
                             <div className={classes.Group2}>
                                 <label htmlFor='oldPassword' className={classes.label}>
-                  Old Password:
+                                    Old Password:
                                 </label>
                                 <TextField 
                                     variant="outlined"
@@ -279,7 +220,7 @@ const ChangePassword: React.FC = () => {
                                 />
                                 <br/>
                                 <label htmlFor='newPassword' className={classes.label}>
-                  New Password:
+                                    New Password:
                                 </label>
                                 <TextField 
                                     variant="outlined"
@@ -296,17 +237,17 @@ const ChangePassword: React.FC = () => {
                             </div>
                         </div>
                         <div className={classes.Group3}>
-                            <Button variant='outlined' color='primary' onClick={(e) => handleSave(e)} className={classes.updateButton}>
-                Save
-                            </Button>
-                            <Button variant='outlined' color='primary' onClick={(e) => handleCancel(e)} className={classes.changeButton}>
-                Cancel
+                            <LoadingButton loading={loading} variant='contained' color='primary' onClick={(e) => handleSave(e)} className={classes.updateButton}>
+                                Save
+                            </LoadingButton>
+                            <Button variant='contained' color='primary' onClick={(e) => handleCancel(e)} className={classes.cancelButton}>
+                                Cancel
                             </Button>
 
                             {showAlert && 
-                (<Alert severity={serverResponseStatus as AlertColor}>
-                    {serverResponse}
-                </Alert>)}
+                                (<Alert severity={serverResponseStatus as AlertColor}>
+                                    {serverResponse}
+                                </Alert>)}
                         </div>
                     </form>
                 </div>

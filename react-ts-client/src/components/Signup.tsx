@@ -3,6 +3,7 @@
 import React from "react";
 import { Button, TextField, makeStyles, createTheme, ThemeProvider } from "@material-ui/core";
 import { Alert, AlertColor } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { SIGNUP_USER } from "../graphql/mutation";
@@ -10,10 +11,10 @@ import { SIGNUP_USER } from "../graphql/mutation";
 const theme = createTheme({
     palette: {
         primary: {
-            main: "#f02726",
+            main: "#1976d2",
         },
         secondary: {
-            main: "#cccccc",
+            main: "#f02726",
         },
     }
 });
@@ -21,13 +22,15 @@ const theme = createTheme({
 const useStyles = makeStyles((theme) => ({
     signupButton: {
         alignSelf: "center",
+        color: "#1976d2"
     // paddingLeft: '25px'
     // marginLeft: '30px'
     },
     signupHeader: {
-        fontSize: "24px",
+        fontSize: "35px",
+        fontWeight: "bold",
         margin: "30px 0",
-        color: "#969696",
+        color: "#1976d2",
         textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
     },
     signupPage: {
@@ -35,8 +38,9 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "#DFDFDF",
         height: "100vh",
-        color: "#868686",
+        color: "#40424D",
         fontFamily: "Arial, sans-serif",
         fontSize: "16px",
         lineHeight: "1.5",
@@ -46,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        color: "#868686",
+        backgroundColor: "#ffffff",
         fontFamily: "Arial, sans-serif",
         fontSize: "16px",
         lineHeight: "1.5",
@@ -60,6 +64,8 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         alignItems: "center",
         marginBottom: theme.spacing(1),
+        color: "#1976d2",
+        fontSize: "18px",
     },
 
     textField: {
@@ -117,6 +123,7 @@ const Signup: React.FC = () => {
                 variables: { input: user }
             });
 
+            console.log("Loading.....", loading);
             if(response) {
                 const statusCode = response.data?.signUp?.statusCode;
 
@@ -133,7 +140,7 @@ const Signup: React.FC = () => {
 
                     setTimeout(() => {
                         navigate("/login");
-                    }, 2000);
+                    }, 1000);
                 }
 
                 else {
@@ -160,14 +167,14 @@ const Signup: React.FC = () => {
         <ThemeProvider theme={theme}>
             <div className={classes.signupPage}>
                 <span className={classes.signupHeader}>
-          USER SIGNUP
+                    USER SIGNUP
                 </span>
                 <div className={classes.signupBlock}>
                     <form onSubmit={(e) => handleSubmit(e)} method='POST'>
                         <div className={classes.formGroup}>
                             <div className={classes.Group1}>
                                 <label htmlFor='name' className={classes.label}>
-                Name:
+                                    Name:
                                 </label>
                                 <TextField 
                                     variant="outlined"
@@ -182,7 +189,7 @@ const Signup: React.FC = () => {
                                 />
                                 <br/>
                                 <label htmlFor='username' className={classes.label}>
-                UserName:
+                                    UserName:
                                 </label>
                                 <TextField 
                                     variant="outlined"
@@ -197,7 +204,7 @@ const Signup: React.FC = () => {
                                 />
                                 <br/>
                                 <label htmlFor='password' className={classes.label}>
-                Password:
+                                    Password:
                                 </label>
                                 <TextField 
                                     variant="outlined"
@@ -214,7 +221,7 @@ const Signup: React.FC = () => {
                             </div>
                             <div className={classes.Group2}>
                                 <label htmlFor='mobile' className={classes.label}>
-                Mobile Number:
+                                    Mobile Number:
                                 </label>
                                 <TextField 
                                     variant="outlined"
@@ -229,7 +236,7 @@ const Signup: React.FC = () => {
                                 />
                                 <br/>
                                 <label htmlFor='role' className={classes.label}>
-                Role:
+                                    Role:
                                 </label>
                                 <TextField 
                                     variant="outlined"
@@ -246,14 +253,14 @@ const Signup: React.FC = () => {
                             </div>
                         </div>
                         <div className={classes.Group3}>
-                            <Button variant='outlined' color='primary' type='submit' className={classes.signupButton}>
-                SignUp
-                            </Button>
+                            <LoadingButton loading={loading} variant='contained' color='primary' type='submit' className={classes.signupButton}>
+                                SignUp
+                            </LoadingButton>
 
                             {showAlert && 
-                  (<Alert severity={serverResponseStatus as AlertColor}>
-                      {serverResponse}
-                  </Alert>)}
+                                (<Alert severity={serverResponseStatus as AlertColor}>
+                                    {serverResponse}
+                                </Alert>)}
                         </div>
                     </form>
                 </div>

@@ -36,7 +36,6 @@ export const typeDefs = gql`
     input LoginInput {
         userName: String!
         password: String!
-        mobile: String!
     }
 
     input GetUserInput {
@@ -46,7 +45,6 @@ export const typeDefs = gql`
     input ChangePasswordInput {
         token: String!
         userName: String!
-        mobile: String!
         oldPassword: String!
         newPassword: String!
     }
@@ -55,8 +53,6 @@ export const typeDefs = gql`
         token: String!
         name: String!
         userName: String!
-        password: String!
-        mobile: String!
         role: String!
     }
 

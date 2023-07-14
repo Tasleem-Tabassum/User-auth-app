@@ -11,10 +11,10 @@ import Logout from "./Logout";
 const theme = createTheme({
     palette: {
         primary: {
-            main: "#f02726",
+            main: "#1976d2",
         },
         secondary: {
-            main: "#cccccc",
+            main: "#f02726",
         },
     }
 });
@@ -31,9 +31,10 @@ const useStyles = makeStyles((theme) => ({
     // margin: '0px 0px 30px 0px'
     },
     userHeader: {
-        fontSize: "24px",
+        fontSize: "35px",
+        fontWeight: "bold",
         margin: "30px 0",
-        color: "#969696",
+        color: "#1976d2",
         textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
     },
     userPage: {
@@ -43,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         height: "100vh",
         color: "#868686",
+        backgroundColor: "#DFDFDF",
         fontFamily: "Arial, sans-serif",
         fontSize: "16px",
         lineHeight: "1.5",
@@ -50,11 +52,13 @@ const useStyles = makeStyles((theme) => ({
     },
     userBlock: {
         display: "flex",
+        flexDirection: "column",
         justifyContent: "space-between",
         alignItems: "center",
-        color: "#868686",
+        color: "#404040",
+        backgroundColor: "#ffffff",
         fontFamily: "Arial, sans-serif",
-        fontSize: "16px",
+        fontSize: "18px",
         lineHeight: "1.5",
         boxShadow: "1px 1px 10px rgba(0, 0, 0, 0.3)",
         padding: "20px",
@@ -74,9 +78,26 @@ const useStyles = makeStyles((theme) => ({
 
     formGroup: {
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         justifyContent: "space-between",
-        padding: "18px"
+        padding: "18px",
+        "& table": {
+            width: "100%",
+            borderCollapse: "collapse",
+        },
+        "& td, th": {
+            padding: theme.spacing(1),
+            textAlign: "left",
+        },
+        "& th": {
+            paddingRight: theme.spacing(2),
+        },
+        "& p": {
+            margin: 0,
+        },
+        "& tr:not(:last-child)": {
+            marginBottom: theme.spacing(1),
+        },
     },
   
     Group1: {
@@ -91,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
         // flexDirection: 'row'
         // paddingLeft: '25px'
         // margin: '0px 0px 30px 0px'
-        padding: "0px 10px 20px 30px"
+        padding: "0px 10px 20px 20px"
     }
 }));
 
@@ -165,7 +186,7 @@ const User: React.FC = () => {
                     USER PROFILE
                 </span>
                 <div className={classes.userBlock}>
-                    <form> {/* onSubmit={(e) => handleSubmit(e)} method='POST'*/}
+                    {/* <form>
                         <div className={classes.formGroup}>
                             <div className={classes.Group1}>
                                 <label htmlFor='name' className={classes.label}>
@@ -247,18 +268,38 @@ const User: React.FC = () => {
                                 <br/>
                             </div>
                         </div>
-                        <div className={classes.Group3}>
-                            <Stack spacing={2} direction="row">
-                                <Button variant='outlined' color='primary' onClick={(e) => handleUpdateProfile(e)} className={classes.updateButton}>
-                                    Update Profile
-                                </Button>
-                                <Button variant='outlined' color='primary' onClick={(e) => handleChangePassword(e)} className={classes.changeButton}>
-                                    Change Password
-                                </Button>
-                                <Logout />
-                            </Stack>
-                        </div>
-                    </form>
+                    </form> */}
+                    <div className={classes.formGroup}>
+                        <table>
+                            <tr>
+                                <td><p>Name: </p></td>
+                                <th><p>{user.name}</p></th>
+                            </tr>
+                            <tr>
+                                <td><p>Username: </p></td>
+                                <th><p>{user.userName}</p></th>
+                            </tr>
+                            <tr>
+                                <td><p>Mobile: </p></td>
+                                <th><p>{user.mobile}</p></th>
+                            </tr>
+                            <tr>
+                                <td><p>Role: </p></td>
+                                <th><p>{user.role}</p></th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div className={classes.Group3}>
+                        <Stack spacing={2} direction="row">
+                            <Button variant='contained' color='primary' onClick={(e) => handleUpdateProfile(e)} className={classes.updateButton}>
+                                Update Profile
+                            </Button>
+                            <Button variant='contained' color='primary' onClick={(e) => handleChangePassword(e)} className={classes.changeButton}>
+                                Change Password
+                            </Button>
+                            <Logout/>
+                        </Stack>
+                    </div>
                 </div>
             </div>
             ) : (

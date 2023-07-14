@@ -24,9 +24,11 @@ const Logout: React.FC = () => {
     };
 
     return (
-        <div>
-            <Button variant='contained' color='primary' onClick={(e) => {handleClick(e);}}>Logout</Button>
-        </div>
+        <ThemeProvider theme={theme}>
+            <div>
+                <Button variant='contained' color='primary' onClick={(e) => {handleClick(e);}}>Logout</Button>
+            </div>
+        </ThemeProvider>
     );
 };
 

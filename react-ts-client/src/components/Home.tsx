@@ -6,19 +6,20 @@ import { useNavigate } from "react-router-dom";
 const theme = createTheme({
     palette: {
         primary: {
-            main: "#f02726",
+            main: "#1976d2",
         },
         secondary: {
-            main: "#cccccc",
+            main: "#f02726",
         },
     }
 });
 
 const useStyles = makeStyles((theme) => ({
     homeHeader: {
-        fontSize: "24px",
+        fontSize: "35px",
+        fontWeight: "bold",
         margin: "30px 0",
-        color: "#969696",
+        color: "#1976d2",
         textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
     },
     homePage: {
@@ -26,10 +27,11 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "#DFDFDF",
         height: "100vh",
-        color: "#868686",
+        color: "#40424D",
         fontFamily: "Arial, sans-serif",
-        fontSize: "16px",
+        fontSize: "18px",
         lineHeight: "1.5",
     
     },
@@ -38,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "space-between",
         boxShadow: "1px 1px 10px rgba(0, 0, 0, 0.3)",
         padding: "25px",
+        backgroundColor: "#ffffff",
         marginTop: "auto",
         marginBottom: "auto"
     },
@@ -88,7 +91,7 @@ const Home: React.FC = () => {
         <ThemeProvider theme={theme}>
             <div className={classes.homePage}>
                 <span className={classes.homeHeader}>
-          USER PORTAL
+                    USER PORTAL
                 </span>
                 <div className={classes.homeBlock}>
                     <div className={classes.loginBlock}>
@@ -99,7 +102,7 @@ const Home: React.FC = () => {
                             <br/>
               Login Now!
                         </span>
-                        <Button variant='outlined' color='primary' className={classes.homeButtons} onClick={(e) => handleLogin(e)}>
+                        <Button variant='contained' color='primary' className={classes.homeButtons} onClick={(e) => handleLogin(e)}>
               Login
                         </Button>
                     </div>
@@ -111,7 +114,7 @@ const Home: React.FC = () => {
                             <br/>
               SignUp Now!
                         </span>
-                        <Button variant='outlined' color='primary' className={classes.homeButtons} onClick={(e) => handleSignUp(e)}>
+                        <Button variant='contained' color='primary' className={classes.homeButtons} onClick={(e) => handleSignUp(e)}>
               SignUp
                         </Button>
                     </div>

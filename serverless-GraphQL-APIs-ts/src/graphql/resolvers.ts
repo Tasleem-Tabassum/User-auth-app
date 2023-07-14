@@ -63,7 +63,7 @@ export const resolvers = {
 
         login: async (_: any, { input }: { input: LoginInput }) => {
             try {
-                const response = await loginController(input.userName, input.password, input.mobile);
+                const response = await loginController(input.userName, input.password /*, input.mobile*/);
 
                 console.log("login resolver response", response);
 
@@ -132,7 +132,6 @@ export const resolvers = {
                 const response = await changePasswordController(
                     input.token,
                     input.userName,
-                    input.mobile,
                     input.oldPassword,
                     input.newPassword,
                 );
@@ -172,9 +171,7 @@ export const resolvers = {
                     input.token,
                     input.name,
                     input.userName,
-                    input.password,
                     input.role,
-                    input.mobile
                 );
 
                 console.log("updateUser resolver response", response);

@@ -20,7 +20,7 @@ export interface SignUpInput {
 export interface LoginInput {
     userName: string;
     password: string;
-    mobile: string;
+    // mobile: string;
 }
 
 export interface GetUserInput {
@@ -30,7 +30,6 @@ export interface GetUserInput {
 export interface ChangePasswordInput {
     token: string;
     userName: string;
-    mobile: string;
     oldPassword: string;
     newPassword: string;
 }
@@ -39,8 +38,6 @@ export interface UpdateUserInput {
     token: string;
     name: string;
     userName: string;
-    password: string;
     role: string;
-    mobile: string;
 }
 

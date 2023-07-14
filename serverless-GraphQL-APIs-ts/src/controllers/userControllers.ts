@@ -40,35 +40,46 @@ export const signUpController = async (name: string, userName: string, password:
                 body: "Name must be a string"
             };
         }
-        
-        // if(typeof mobile !== 'number') {
-        //     return {
-        //         statusCode: 400,
-        //         body: "Mobile Number must be a number"
-        //     }
-        // }
 
-        const getDataParams = {
+        const queryDataParams = {
             TableName: process.env.USERS_TABLE || "",
-            Key: {
-                UserName: userName,
-                MobileNumber: mobile
+            KeyConditionExpression: "UserName = :userName",
+            ExpressionAttributeValues: {
+                ":userName": userName,
             }
         };
 
-        const user = await dynamodb.get(getDataParams).promise();
-        console.log(user);
-        
+        const userData = await dynamodb.query(queryDataParams).promise();
+        console.log("user after query",userData);
 
-        if(user.Item?.UserName !== undefined) {
-            console.log("user", user);
+        if((userData.Items?.length) && (userData.Items[0]?.UserName !== undefined)) {
             return {
                 statusCode: 400,
                 body: JSON.stringify({
-                    message: "UserName already exists!"
+                    message: "User already exists!"
                 })
             };
         }
+
+        // const queryDataParamsForMobile = {
+        //     TableName: process.env.USERS_TABLE || "",
+        //     KeyConditionExpression: "MobileNumber = :mobile",
+        //     ExpressionAttributeValues: {
+        //         ":mobile": mobile
+        //     }
+        // };
+
+        // const userDataFromMobile = await dynamodb.query(queryDataParamsForMobile).promise();
+        // console.log("user after query", userDataFromMobile);
+
+        // if((userDataFromMobile.Items?.length) && (userDataFromMobile.Items[0]?.MobileNumber !== undefined)) {
+        //     return {
+        //         statusCode: 400,
+        //         body: JSON.stringify({
+        //             message: "User already exists!"
+        //         })
+        //     };
+        // }
 
         const passwordHash = await bcrypt.hash(password, 8);
 
@@ -122,9 +133,9 @@ export const getUserFromDb = async (userName: string): Promise<any> => {
     }
 };
 
-export const loginController = async (userName: string, password: string, mobile: string): Promise<response> => {
+export const loginController = async (userName: string, password: string/*, mobile: string*/): Promise<response> => {
     try {
-        if(!userName || !mobile) {
+        if(!userName || !password) {
             return {
                 statusCode: 400,
                 body: "Login details are missing"
@@ -231,7 +242,7 @@ export const getUserController = async (token: string): Promise<response> => {
     }
 };
   
-export const updateUserController = async (token: string, name: string, userName: string, password: string, role: string, mobile: string): Promise<response> => {
+export const updateUserController = async (token: string, name: string, userName: string, role: string): Promise<response> => {
     try {
       
         const secretKey = process.env.JWT_SECRET || "";
@@ -247,6 +258,12 @@ export const updateUserController = async (token: string, name: string, userName
                 body: JSON.stringify({ message: "Unauthorized" }),
             };
         }
+
+        const userNameFromToken = decodedToken.UserName;
+
+        const user = await getUserFromDb(userNameFromToken);
+
+        const mobile = user[0].MobileNumber;
 
         const updateExpression = "SET #name = :name, #role = :role";
         const expressionAttributeNames = {
@@ -287,7 +304,7 @@ export const updateUserController = async (token: string, name: string, userName
     }
 };
 
-export const changePasswordController = async (token: string, userName: string, mobile: string, oldPassword: string, newPassword: string): Promise<response> => {
+export const changePasswordController = async (token: string, userName: string, oldPassword: string, newPassword: string): Promise<response> => {
     try {
         const secretKey = process.env.JWT_SECRET || "";
 
@@ -307,6 +324,8 @@ export const changePasswordController = async (token: string, userName: string, 
 
         const user = await getUserFromDb(userNameFromToken);
         console.log("user in getuser",user);
+
+        const mobile = user[0].MobileNumber;
 
         const oldPasswordMatch = await verifyPassword(userName, oldPassword, mobile);
         console.log(oldPasswordMatch);
